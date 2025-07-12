@@ -1,0 +1,16 @@
+Documento Interno - Políticas Generales de Evaluación de Créditos
+
+Estas pautas son una guía para el equipo de analistas de riesgo. No son reglas fijas, pero deben tomarse como base para tomar decisiones.
+
+1. Generalmente, los solicitantes deben tener entre 21 y 70 años.
+2. Usualmente, los ingresos deben superar 1.500.000 COP mensuales. Sin embargo, se han hecho excepciones cuando el score crediticio es alto.
+3. En principio, no se aprueban solicitudes con score crediticio por debajo de 600. Aunque si el cliente ya tiene un historial con nosotros, podría considerarse.
+4. Las justificaciones relacionadas con viajes o vacaciones suelen no ser prioritarias, pero han sido aprobadas en algunos casos según el perfil.
+5. A los clientes nuevos se les exige más rigurosidad, pero si la región es estratégica (como Bogotá o Antioquia), se pueden flexibilizar algunos criterios.
+6. Si la solicitud es para estudios o salud, debería aprobarse siempre que el cliente tenga ingresos estables.
+7. En algunos casos se ha considerado la edad como un factor limitante, especialmente en mayores de 65 años, aunque no hay una regla clara.
+8. Las reglas deben ser evaluadas caso por caso. Se espera criterio profesional.
+
+Nota: No todas las reglas están documentadas, el equipo debe guiarse también por el sentido común y experiencias previas.
+
+-- Fin del documento --
