@@ -1,219 +1,89 @@
 # 🏦 Fintech Credit Advisor
 
-Sistema inteligente de evaluación de créditos desarrollado con FastAPI y Streamlit, que utiliza modelos GenAI para proporcionar asesoramiento crediticio personalizado.
+Sistema inteligente de evaluación de solicitudes de crédito utilizando GenAI (Gemini) con FastAPI para ofrecer recomendaciones personalizadas basadas en políticas crediticias predefinidas.
 
 ## 📋 Descripción del Proyecto
 
-Este proyecto implementa un sistema completo de evaluación de crédito que incluye:
+Este proyecto implementa un evaluador de créditos basado en IA que:
 
-- **Backend API**: Servicio FastAPI con agentes inteligentes para evaluación crediticia
-- **Frontend Web**: Interfaz de chat moderna desarrollada con Streamlit
-- **Procesamiento de Datos**: Análisis automático de solicitudes de crédito
-- **Sistema de Conversación**: Chat interactivo para recopilar información del usuario
+- Utiliza el modelo Gemini de Google para analizar solicitudes de crédito
+- Evalúa cada solicitud según políticas crediticias documentadas
+- Implementa una API REST para integración con sistemas externos
+- Proporciona un flujo conversacional guiado para captura de información
+- Analiza y compara resultados entre decisiones humanas y de IA
+
+## 🔍 Análisis de Datos y Aprendizaje
+
+El proyecto incluye análisis exploratorio detallado en notebooks que:
+
+- Examina patrones en aprobaciones/rechazos según criterios específicos
+- Valida reglas de negocio con datos históricos (ingresos, score crediticio)
+- Compara decisiones del agente IA vs decisiones históricas
+- Identifica casos especiales donde las políticas son flexibilizadas
+
+## 🧠 Modelo de IA y Técnicas de Prompt
+
+- **Modelo**: Google Gemini (accedido vía Google GenAI SDK)
+- **Técnicas de Prompt**:
+  - **Prompt Estructurado**: Formato específico con datos del cliente y políticas
+  - **In-Context Learning**: Uso de reglas de negocio como contexto en cada solicitud
+  - **JSON Schema Enforcement**: Respuestas estructuradas usando esquemas Pydantic
+  - **Role-Based Prompt**: Instrucciones específicas para comportarse como experto crediticio
 
 ## 🏗️ Estructura del Proyecto
 
 ```
 seg_bolivar_challenge/
-├── data/                           # Datos de solicitudes de crédito
-│   └── solicitudes_credito_simuladas.csv
-├── docs/                           # Documentación y políticas
-│   ├── advisor.txt
-│   └── politicas.txt
-├── notebooks/                      # Análisis exploratorio de datos
-│   ├── eda_report.html
-│   └── exploracion_datos.ipynb
-├── src/                           # Código fuente principal
-│   ├── agent.py                   # Agentes de IA para evaluación
-│   ├── app.py                     # Aplicación frontend Streamlit
-│   ├── config.py                  # Configuración de la aplicación
-│   ├── schemas.py                 # Esquemas de validación de datos
-│   ├── tools.py                   # Herramientas de consulta de datos
-│   ├── utils.py                   # Utilidades del frontend
+├── data/                         # Datos para análisis y pruebas
+│   ├── solicitudes_credito_simuladas.csv  # Dataset de prueba
+│   └── resultados_evaluador.csv  # Resultados de evaluación IA
+├── docs/                         # Documentación y políticas
+│   ├── advisor.txt               # Instrucciones para agente conversacional
+│   └── politicas.txt             # Políticas de evaluación crediticia
+├── notebooks/                    # Análisis exploratorio
+│   ├── exploracion_datos.ipynb   # EDA de solicitudes históricas
+│   ├── comparacion_resultados.ipynb  # Comparativa IA vs decisiones históricas
+│   └── eda_report.html           # Reporte generado con Sweetviz
+├── src/                          # Código fuente
+│   ├── agent.py                  # Implementación de agentes IA (advisor/evaluator)
+│   ├── schemas.py                # Esquemas Pydantic para validación
+│   ├── tools.py                  # Herramientas de consulta de datos
+│   ├── main.py                   # Punto de entrada FastAPI
 │   └── api/
-│       └── routes.py              # Rutas de la API FastAPI
-├── requirements.txt               # Dependencias del proyecto
-├── start.sh                       # Script de inicio para Linux/Mac
-├── start.bat                      # Script de inicio para Windows
-└── README.md                      # Este archivo
+│       └── routes.py             # Endpoints de la API
+├── test_evaluator.py             # Script para validación masiva
+└── requirements.txt              # Dependencias del proyecto
 ```
 
-## 🚀 Instalación y Configuración
+## 💻 API y Arquitectura
+
+- **Backend**: FastAPI con endpoints para evaluación directa y conversacional
+- **Agentes IA**:
+  - `agent_advisor`: Guía la conversación para recopilar información
+  - `agent_evaluator`: Toma decisiones basadas en políticas crediticias
+- **Validación**: Esquemas Pydantic para garantizar estructura correcta de datos
+- **Integración**: Diseño modular para conectar con sistemas front-end o externos
+
+## 🚀 Instalación y Uso
 
 ### Prerrequisitos
+- Python 3.8+
+- Cuenta en Google AI Studio (para API key de Gemini)
 
-- Python 3.8 o superior
-- pip (gestor de paquetes de Python)
-
-### Instalación
-
-1. **Clonar el repositorio**:
-   ```bash
-   git clone <repository-url>
-   cd seg_bolivar_challenge
+### Configuración
+1. Clonar repositorio
+2. Instalar dependencias: `pip install -r requirements.txt`
+3. Crear archivo `.env` con las variables:
+   ```
+   API_KEY=your_google_ai_key
+   MODEL_NAME=gemini-1.0-pro
    ```
 
-2. **Instalar dependencias**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Configurar variables de entorno** (opcional):
-   ```bash
-   # Crear archivo .env
-   echo "API_BASE_URL=http://localhost:8000" > .env
-   echo "API_TIMEOUT=30" >> .env
-   ```
-
-## 🎯 Ejecución de la Aplicación
-
-### Opción 1: Script Automático (Recomendado)
-
-**En Windows**:
-```cmd
-start.bat
-```
-
-**En Linux/Mac**:
+### Ejecución
 ```bash
-chmod +x start.sh
-./start.sh
+# Iniciar API
+uvicorn src.main:app --reload
+
+# Ejecutar evaluación masiva
+python test_evaluator.py
 ```
-
-### Opción 2: Ejecución Manual
-
-**1. Iniciar el Backend (Terminal 1)**:
-```bash
-uvicorn src.api.routes:router --host localhost --port 8000 --reload
-```
-
-**2. Iniciar el Frontend (Terminal 2)**:
-```bash
-streamlit run src/app.py --server.port 8501
-```
-
-### Opción 3: Servicios Individuales
-
-**Solo Backend**:
-```bash
-./start.sh backend    # Linux/Mac
-start.bat backend     # Windows
-```
-
-**Solo Frontend**:
-```bash
-./start.sh frontend   # Linux/Mac
-start.bat frontend    # Windows
-```
-
-## 🌐 Acceso a la Aplicación
-
-Una vez iniciados los servicios:
-
-- **Frontend (Chat)**: http://localhost:8501
-- **Backend API (Documentación)**: http://localhost:8000/docs
-- **Backend API (Redoc)**: http://localhost:8000/redoc
-
-## 💬 Uso del Sistema
-
-### Flujo de Conversación
-
-1. **Accede** al frontend en tu navegador
-2. **Inicia** una conversación proporcionando tu información:
-   - ID de usuario
-   - Edad
-   - Ingresos mensuales
-   - Región de residencia
-   - Justificación para el crédito
-
-3. **Interactúa** con el asistente que te guiará paso a paso
-4. **Recibe** la evaluación crediticia final con justificación
-
-### Ejemplo de Conversación
-
-```
-Usuario: Hola, quiero solicitar un crédito
-Asistente: ¡Hola! Te ayudo con tu solicitud. ¿Podrías proporcionarme tu ID de usuario?
-
-Usuario: Mi ID es 12345
-Asistente: Perfecto. ¿Cuál es tu edad?
-
-Usuario: Tengo 35 años
-Asistente: Gracias. ¿Cuáles son tus ingresos mensuales?
-...
-```
-
-## 🛠️ Arquitectura Técnica
-
-### Backend (FastAPI)
-
-- **Agentes Inteligentes**: Procesamiento de lenguaje natural para recopilar información
-- **Sistema de Evaluación**: Análisis crediticio basado en políticas predefinidas
-- **API RESTful**: Endpoints para chat y evaluación directa
-- **Validación de Datos**: Esquemas Pydantic para integridad de datos
-
-### Frontend (Streamlit)
-
-- **Interfaz de Chat**: Chat en tiempo real con el asistente
-- **Estado de Sesión**: Mantenimiento del historial de conversación
-- **Diseño Responsivo**: Interfaz moderna y profesional
-- **Manejo de Errores**: Feedback claro para problemas de conectividad
-
-## 🔧 Configuración Avanzada
-
-### Variables de Entorno
-
-| Variable | Descripción | Valor por Defecto |
-|----------|-------------|-------------------|
-| `API_BASE_URL` | URL base del backend | `http://localhost:8000` |
-| `API_TIMEOUT` | Timeout para requests | `30` |
-| `MAX_CONVERSATION_LENGTH` | Máximo de mensajes en conversación | `50` |
-
-### Personalización
-
-- **Estilos CSS**: Modifica `src/utils.py` para cambiar la apariencia
-- **Configuración**: Ajusta `src/config.py` para modificar comportamientos
-- **Agentes**: Personaliza `src/agent.py` para cambiar la lógica de evaluación
-
-## 🧪 Testing
-
-Para ejecutar las pruebas (cuando estén disponibles):
-
-```bash
-# Instalar dependencias de desarrollo
-pip install pytest
-
-# Ejecutar pruebas
-pytest tests/
-```
-
-## 📊 Monitoreo y Logs
-
-- Los logs del backend se muestran en la consola donde se ejecuta uvicorn
-- Los logs del frontend aparecen en la consola de Streamlit
-- Usa el endpoint `/docs` para testing manual de la API
-
-## 🤝 Contribución
-
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/nueva-caracteristica`)
-3. Commit tus cambios (`git commit -am 'Agrega nueva característica'`)
-4. Push a la rama (`git push origin feature/nueva-caracteristica`)
-5. Abre un Pull Request
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver `LICENSE` para más detalles.
-
-## 🆘 Soporte
-
-Si encuentras problemas:
-
-1. **Revisa los logs** en las consolas de backend y frontend
-2. **Verifica la conectividad** entre frontend y backend
-3. **Consulta la documentación** de la API en `/docs`
-4. **Abre un issue** en el repositorio del proyecto
-
----
-
-**Desarrollado con ❤️ para Seguros Bolívar**
